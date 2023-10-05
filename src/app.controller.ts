@@ -1,6 +1,7 @@
-import { BadRequestException, NotFoundException, Controller, Get, Param } from '@nestjs/common';
+import { BadRequestException, NotFoundException, Controller, Body, Get, Param, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { data, ReportType } from './data';
+import { v4 as uuid } from 'uuid';
 
 @Controller('report/:type')
 export class AppController {
@@ -38,8 +39,29 @@ export class AppController {
       return report;
   }
   
-  
-  
+  @Post()
+  createReport(
+    @Body() { amount, source }: {
+      amount: number
+      source: string
+    }, @Param('type') type: string
+  ) {
+    if (type !== 'income' && type !== 'expense') {
+      throw new BadRequestException(
+        'Invalid report type. Accepted types are: income, expense',
+      );
+    }
+    const newReport = {
+      id: uuid(),
+      amount,
+      source,
+      created_at: new Date(),
+      updated_at: new Date(),
+      type: type === "income" ? ReportType.INCOME : ReportType.EXPENSE
+    }
+    data.report.push(newReport)
+    return newReport;
+  }
   
   
   
