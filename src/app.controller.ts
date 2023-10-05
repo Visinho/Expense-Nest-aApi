@@ -1,4 +1,4 @@
-import { BadRequestException, NotFoundException, Controller, Body, Get, Param, Post, Put } from '@nestjs/common';
+import { BadRequestException, NotFoundException, Controller, Body, Get, Param, Post, Put, Delete, HttpCode } from '@nestjs/common';
 import { AppService } from './app.service';
 import { data, ReportType } from './data';
 import { v4 as uuid } from 'uuid';
@@ -89,6 +89,27 @@ data.report[reportIndex] = {
       return data.report[reportIndex] 
 }
   
+@HttpCode(204)
+@Delete(":id")
+deleteReport(
+  @Param("id") id: string,
+  @Param("type") type: string,
+){
   
+  const reportType = type === 'income' ? ReportType.INCOME : ReportType.EXPENSE;
+    const reportToDelete = data.report
+    .filter((report) => report.type === reportType)
+    .find((report) => report.id === id);
+  const reportIndex = data.report.findIndex((report) => report.id === reportToDelete.id);
+
+  if (!reportToDelete) {
+    throw new NotFoundException(`Report with id ${id} not found.`);
+}
+
+data.report.splice(reportIndex, 1);
+return "Report deleted successfully";
+}
   
+
+
 }
