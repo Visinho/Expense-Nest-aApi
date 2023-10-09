@@ -11,6 +11,10 @@ interface DataProps {
   amount: number
   source: string
 }
+interface UpdateDataProps {
+  amount?: number
+  source?: string
+}
 
 @Injectable()
 export class AppService {
@@ -61,7 +65,7 @@ export class AppService {
     return newReport;
   }
 
-  updateReport(type: ReportType, id: string, body : DataProps){
+  updateReport(type: ReportType, id: string, body : UpdateDataProps){
     const reportToUpdate = data.report
       .filter((report) => report.type === type)
       .find((report) => report.id === id);
