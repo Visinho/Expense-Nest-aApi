@@ -1,24 +1,46 @@
-import { IsNumber, IsPositive, IsString, IsNotEmpty, IsOptional } from "class-validator";
-
+import {
+  IsNumber,
+  IsPositive,
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+} from 'class-validator';
+import { Exclude, Expose } from "class-transformer";
+import { ReportType } from 'src/data';
 
 export class CreateReportDto {
-    @IsNumber()
-    @IsPositive()
-    amount: number;
+  @IsNumber()
+  @IsPositive()
+  amount: number;
 
-    @IsString()
-    @IsNotEmpty()
-    source: string;
+  @IsString()
+  @IsNotEmpty()
+  source: string;
 }
 
 export class updateReportDto {
-    @IsOptional()
-    @IsNumber()
-    @IsPositive()
-    amount: number;
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  amount: number;
 
-    @IsOptional()
-    @IsString()
-    @IsNotEmpty()
-    source: string;
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  source: string;
+}
+
+export class ReportResponseDto {
+  id: string;
+  source: string;
+  amount: number;
+  created_at: Date;
+  
+  @Exclude()
+  updated_at: Date;
+  type: ReportType;
+
+  constructor(partial: Partial<ReportResponseDto>) {
+    Object.assign(this, partial);
+  }
 }
